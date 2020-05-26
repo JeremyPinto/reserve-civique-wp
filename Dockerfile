@@ -2,10 +2,12 @@ FROM php:7-fpm
 
 RUN apt-get update && apt-get install -y curl git
 
-RUN apt-get update && apt-get install -y zlib1g-dev libzip-dev \
-  && docker-php-ext-install -j$(nproc) zip
-
-RUN docker-php-ext-install mysqli
+RUN apt-get update && apt-get install -y zlib1g-dev libzip-dev libmagickwand-dev \
+  && pecl install imagick \
+  && docker-php-ext-install -j$(nproc) zip \
+  && docker-php-ext-install -j$(nproc) mysqli \
+  && docker-php-ext-enable imagick \
+  && apt-get clean && rm -r /var/lib/apt/*
 
 RUN curl -sS https://getcomposer.org/installer | php \
         && mv composer.phar /usr/local/bin/ \
